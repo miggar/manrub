@@ -98,6 +98,48 @@
           grid-column: 3 / 4;
         }
       }
+
+      /* Modal Styles */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        background-color: #0008;
+
+        visibility: hidden;
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+      }
+      .modal-close {
+        position: fixed;
+        top: 25px;
+        right: 25px;
+        background-color: #FFFD;
+        width: min-content;
+        padding: 10px;
+        border-radius: 50%;
+        line-height: 1em;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .modal-close:hover { background-color: white }
+
+      video {
+        max-width: 80%;
+        margin: auto;
+        display: block;
+      }
+
+      .visible {
+        visibility: visible;
+        opacity: 1;
+      }
     </style>
   </head>
   <body>
@@ -112,6 +154,13 @@
       <div class="box item4"></div>
       <div class="box item5"></div>
     </div>
+    
+    <div class="modal">
+      <div class="modal-close">&#9587;</div>
+      <div class="modal-container">
+        <video type="video/mp4" controls></video>
+      </div>
+    </div>
 
     <script>
       const init = function() {
@@ -120,8 +169,25 @@
         const item3 = document.querySelector('.item3');
         const item4 = document.querySelector('.item4');
         const item5 = document.querySelector('.item5');
+        const modal = document.querySelector('.modal');
+        const video = document.querySelector('video');
+        
+        const closeVideo = function() {
+          modal.classList.remove('visible');
+        }
+
         const playVideo = function( value ) {
           console.log('value: ', value);
+          modal.classList.add('visible');
+
+          video.src = 'https://pixabay.com/es/videos/download/video-108429_tiny.mp4';
+          video.play();
+          /*
+          .then(() =>            
+            setTimeout(() => {
+              closeVideo();
+            }, 3000)
+          );*/
         }
 
         item1.addEventListener('click', playVideo.bind(this, 'item1'));
