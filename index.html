@@ -102,5 +102,29 @@
       <div class="box item4"></div>
       <div class="box item5"></div>
     </div>
+
+    <script>
+      const init = function() {
+        const item1 = document.querySelector('.item1');
+        const item2 = document.querySelector('.item2');
+        const item3 = document.querySelector('.item3');
+        const item4 = document.querySelector('.item4');
+        const item5 = document.querySelector('.item5');
+        const playVideo = function( value ) {
+          console.log('value: ', value);
+        }
+
+        item1.addEventListener('click', playVideo.bind(this, 'item1'));
+        item2.addEventListener('click', playVideo.bind(this, 'item2'));
+        item3.addEventListener('click', playVideo.bind(this, 'item3'));
+        item4.addEventListener('click', playVideo.bind(this, 'item4'));
+        item5.addEventListener('click', playVideo.bind(this, 'item5'));
+
+      }
+
+      (document.readyState !== 'loading')
+        ? init()
+        : document.addEventListener('DOMContentLoaded', () => init );
+    </script>
   </body>
 </html>
