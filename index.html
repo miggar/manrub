@@ -111,7 +111,7 @@
         justify-content: center;
         align-items: center;
 
-        background-color: #0008;
+        background-color: #000D;
 
         visibility: hidden;
         opacity: 0;
@@ -230,6 +230,8 @@
         }
         const closeVideo = function() {
           modal.classList.remove('visible');
+          video.pause();
+          video.currentTime = 0;
         }
         const playVideo = function( urlVideo = '' ) {
           // console.log('value: ', urlVideo);
@@ -246,7 +248,6 @@
           };
           video.onended = ( event ) => {
             cancelFullScreenVideo();
-
           };
 
           /*
@@ -264,7 +265,6 @@
         item4.addEventListener('click', playVideo.bind(this, './assets/video/planetin.mp4'));
         item5.addEventListener('click', playVideo.bind(this, './assets/video/planetin.mp4'));
         modalClose.addEventListener('click', cancelFullScreenVideo );
-
       }
 
       (document.readyState !== 'loading')
