@@ -107,6 +107,7 @@
         right: 0;
         bottom: 0;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
 
@@ -117,9 +118,13 @@
         transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
       }
       .modal-close {
-        position: fixed;
+        /* position: fixed;
         top: 25px;
-        right: 25px;
+        right: 25px; */
+        position: relative;
+        top: 1em;
+        /* align-self: end;
+        right: calc(10% - 1em); */
         background-color: #FFFD;
         width: min-content;
         padding: 10px;
@@ -127,18 +132,53 @@
         line-height: 1em;
         font-weight: bold;
         cursor: pointer;
+
+        visibility: hidden;
+        opacity: 0;
+        transition-delay: 1s;
+        transition-property: opacity, visibility;
       }
       .modal-close:hover { background-color: white }
 
       video {
         max-width: 80%;
-        margin: auto;
+        margin: 0 auto;
         display: block;
+        pointer-events: none;
       }
 
-      .visible {
+      .visible,
+      .visible * {
         visibility: visible;
         opacity: 1;
+      }
+
+      /* video::-webkit-media-controls, No funciona el video */
+      /*
+      video::-webkit-media-controls-closed-captions-container,
+      video::-webkit-media-controls-closed-captions-track-list,
+      video::-webkit-media-controls-current-time-display,
+      video::-webkit-media-controls-fullscreen-button,
+      video::-webkit-media-controls-fullscreen-volume-min-button,
+      video::-webkit-media-controls-fullscreen-volume-max-button,
+      video::-webkit-media-controls-fullscreen-volume-slider,
+      video::-webkit-media-controls-mute-button,
+      video::-webkit-media-controls-overlay-play-button,
+      video::-webkit-media-controls-play-button,
+      video::-webkit-media-controls-return-to-realtime-button,
+      video::-webkit-media-controls-rewind-button,
+      video::-webkit-media-controls-seek-back-button,
+      video::-webkit-media-controls-seek-forward-button,
+      video::-webkit-media-controls-timeline,
+      video::-webkit-media-controls-timeline-container,
+      video::-webkit-media-controls-time-remaining-display,
+      video::-webkit-media-controls-toggle-closed-captions-button,
+      video::-webkit-media-controls-volume-slider,
+      video::-webkit-media-controls-volume-slider-mute-button,
+
+      */
+      video::-webkit-media-controls-panel {
+        display: none;
       }
     </style>
   </head>
@@ -157,9 +197,9 @@
     
     <div class="modal">
       <div class="modal-close">&#9587;</div>
-      <div class="modal-container">
-        <video type="video/mp4" controls></video>
-      </div>
+      <video type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
     </div>
 
     <script>
@@ -171,17 +211,44 @@
         const item5 = document.querySelector('.item5');
         const modal = document.querySelector('.modal');
         const video = document.querySelector('video');
-        
+        const modalClose = document.querySelector('.modal-close');
+
+        video.controls = false;
+
+        // Functions
+        const launchFullScreenVideo = function() {
+          if(video.requestFullScreen) video.requestFullScreen();
+          else if(video.mozRequestFullScreen) video.mozRequestFullScreen();
+          else if(video.webkitRequestFullScreen) video.webkitRequestFullScreen();
+        }
+        const cancelFullScreenVideo = function() {
+          if(document.cancelFullScreen) document.cancelFullScreen();
+          else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+          else if(document.webkitCancelFullScreen) document.webkitCancelFullScreen();
+
+          closeVideo();
+        }
         const closeVideo = function() {
           modal.classList.remove('visible');
         }
-
-        const playVideo = function( value ) {
-          console.log('value: ', value);
+        const playVideo = function( urlVideo = '' ) {
+          // console.log('value: ', urlVideo);
           modal.classList.add('visible');
 
-          video.src = 'https://pixabay.com/es/videos/download/video-108429_tiny.mp4';
+          // video.src = 'https://pixabay.com/es/videos/download/video-108429_tiny.mp4';
+          video.src = urlVideo;
+
+         
+
           video.play();
+          video.onplay = ( event ) => {
+             launchFullScreenVideo();
+          };
+          video.onended = ( event ) => {
+            cancelFullScreenVideo();
+
+          };
+
           /*
           .then(() =>            
             setTimeout(() => {
@@ -190,11 +257,13 @@
           );*/
         }
 
-        item1.addEventListener('click', playVideo.bind(this, 'item1'));
-        item2.addEventListener('click', playVideo.bind(this, 'item2'));
-        item3.addEventListener('click', playVideo.bind(this, 'item3'));
-        item4.addEventListener('click', playVideo.bind(this, 'item4'));
-        item5.addEventListener('click', playVideo.bind(this, 'item5'));
+        // Events
+        item1.addEventListener('click', playVideo.bind(this, './assets/video/planetin.mp4'));
+        item2.addEventListener('click', playVideo.bind(this, './assets/video/planetin.mp4'));
+        item3.addEventListener('click', playVideo.bind(this, './assets/video/planetin.mp4'));
+        item4.addEventListener('click', playVideo.bind(this, './assets/video/planetin.mp4'));
+        item5.addEventListener('click', playVideo.bind(this, './assets/video/planetin.mp4'));
+        modalClose.addEventListener('click', cancelFullScreenVideo );
 
       }
 
